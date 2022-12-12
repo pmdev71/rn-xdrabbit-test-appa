@@ -58,6 +58,7 @@ const LogIn = ({navigation}) => {
         if (status === 'Success') {
           storeDataAsyncStorage(data);
           navigation.navigate('Welcome', {user: data});
+          // navigation.navigate('AppStack');
         } else if (status === 'Pending') {
           console.log('Email Verification--->', msg);
           navigation.navigate('EmailVerification');

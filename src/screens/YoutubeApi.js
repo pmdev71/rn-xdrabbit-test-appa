@@ -12,6 +12,7 @@ import {
   ScrollView,
   TouchableOpacity,
   PixelRatio,
+  Button,
 } from 'react-native';
 
 // Import Youtube Players
@@ -28,17 +29,18 @@ const YoutubeApi = () => {
     'F9LwbmIWIr0',
   ];
 
-  const [isReady, setIsReady] = useState(false);
-  const [status, setStatus] = useState(null);
-  const [quality, setQuality] = useState(null);
-  const [error, setError] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isLooping, setIsLooping] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [fullscreen, setFullscreen] = useState(false);
-  const [containerMounted, setContainerMounted] = useState(false);
-  const [containerWidth, setContainerWidth] = useState(null);
+  const [isReady, setIsReady] = useState(false); // true/false
+  const [status, setStatus] = useState(null); // 'unstarted', 'ended', 'playing', 'paused', 'buffering', 'cued'.
+  const [quality, setQuality] = useState(null); // 'small', 'medium', 'large', 'hd720', 'hd1080', 'highres', 'default'.
+  const [error, setError] = useState(null); //
+  const [isPlaying, setIsPlaying] = useState(true); // true/false
+  const [isLooping, setIsLooping] = useState(false); // true/false
+  const [duration, setDuration] = useState(0); // total duration of video
+  const [currentTime, setCurrentTime] = useState(0); // current playing time of video
+  const [fullscreen, setFullscreen] = useState(false); // true/false
+  const [containerMounted, setContainerMounted] = useState(false); // true/false
+  const [containerWidth, setContainerWidth] = useState(null); // width of container
+  const [showinfo, setShowinfo] = useState(false); // true/false
 
   const API_KEY = 'AIzaSyAWM6tON4D0liKmDO31g5c4b-6R5RRjmxM';
 
@@ -84,6 +86,7 @@ const YoutubeApi = () => {
             onChangeState={e => setStatus(e.state)}
             onChangeQuality={e => setQuality(e.quality)}
             onChangeFullscreen={e => setFullscreen(e.isFullscreen)}
+            //onProgress work only on IOS
             onProgress={e => {
               setDuration(e.duration);
               setCurrentTime(e.currentTime);
@@ -130,6 +133,18 @@ const YoutubeApi = () => {
             }>
             <Text style={styles.buttonText}>Next Video</Text>
           </TouchableOpacity>
+          <Button
+            title="log details"
+            onPress={() => {
+              youtubePlayerRef.current
+                ?.getCurrentTime()
+                .then(currentTime => console.log({currentTime}));
+
+              youtubePlayerRef.current
+                ?.getDuration()
+                .then(getDuration => console.log({getDuration}));
+            }}
+          />
         </View>
 
         {/* Go To Specific time in played video with seekTo() */}
@@ -252,3 +267,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
 });
+
+// {"current": {"_backPress": [Function anonymous], "_interval": null, "_nativeComponentRef": {"current": [ReactNativeFiberHostComponent]}, "_onChangeFullscreen": [Function anonymous], "_onChangeQuality": [Function anonymous], "_onChangeState": [Function anonymous], "_onError": [Function anonymous], "_onLayout": [Function anonymous], "_onReady": [Function anonymous], "_reactInternalInstance": {}, "_reactInternals": {"_debugHookTypes": null, "_debugNeedsRemount": false, "_debugOwner": [FiberNode], "_debugSource": undefined, "actualDuration": 0.4767000013962388, "actualStartTime": 4634382.6838, "alternate": [FiberNode], "child": [FiberNode], "childLanes": 0, "deletions": null, "dependencies": null, "elementType": [Function YouTube], "flags": 5, "index": 0, "key": null, "lanes": 1, "memoizedProps": [Object], "memoizedState": [Object], "mode": 2, "pendingProps": [Object], "ref": [Circular], "return": [FiberNode], "selfBaseDuration": 0.18910000007599592, "sibling": [FiberNode], "stateNode": [Circular], "subtreeFlags": 5, "tag": 1, "treeBaseDuration": 0.37410000059753656, "type": [Function YouTube], "updateQueue": [Object]}, "_timeout": 153, "context": {}, "getCurrentTime": [Function anonymous], "getDuration": [Function anonymous], "getVideosIndex": [Function anonymous], "props": {"apiKey": "AIzaSyAWM6tON4D0liKmDO31g5c4b-6R5RRjmxM", "controls": 1, "fullscreen": false, "loop": false, "onChangeFullscreen": [Function onChangeFullscreen], "onChangeQuality": [Function onChangeQuality], "onChangeState": [Function onChangeState], "onError": [Function onError], "onProgress": [Function onProgress], "onReady": [Function onReady], "play": false, "resumePlayAndroid": true, "showFullscreenButton": true, "style": [Array], "videoIds": [Array]}, "refs": {}, "state": {"fullscreen": false, "resizingHackFlag": false}, "updater": {"enqueueForceUpdate": [Function enqueueForceUpdate], "enqueueReplaceState": [Function enqueueReplaceState], "enqueueSetState": [Function enqueueSetState], "isMounted": [Function isMounted]}}}

@@ -20,11 +20,10 @@ import YouTube from 'react-native-youtube';
 
 const YoutubeApi = () => {
   const youtubePlayerRef = useRef();
-  const singleVideoId = '4A426Yjm_jM';
+  const [singleVideoId, setSingleVideoId] = useState('4A426Yjm_jM');
   const listVideoIds = [
     '0BxQSe9pHrY',
     '4A426Yjm_jM',
-    'F4CiaPDnOiI',
     'BfmIgt_kPvM',
     'F9LwbmIWIr0',
   ];
@@ -45,6 +44,26 @@ const YoutubeApi = () => {
   const API_KEY = 'AIzaSyAWM6tON4D0liKmDO31g5c4b-6R5RRjmxM';
 
   console.log(youtubePlayerRef);
+  const handlePlayNext = () => {
+    setSingleVideoId('F9LwbmIWIr0');
+    setIsPlaying(false);
+  };
+
+  setInterval(function () {
+    youtubePlayerRef.current?.getCurrentTime().then(currentTime => {
+      console.log({currentTime});
+      console.log(currentTime);
+      if (currentTime >= 10) {
+        setIsPlaying(false);
+        handlePlayNext();
+        // youtubePlayerRef.current && youtubePlayerRef.current.nextVideo();
+      }
+    });
+
+    // youtubePlayerRef.current
+    //   ?.getDuration()
+    //   .then(getDuration => console.log({getDuration}));
+  }, 2000);
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -66,8 +85,8 @@ const YoutubeApi = () => {
             // Un-comment one of videoId / videoIds / playlist.
             // You can also edit these props while Hot-Loading in development mode to see how
             // it affects the loaded native module
-            // videoId={singleVideoId}
-            videoIds={listVideoIds}
+            videoId={singleVideoId}
+            // videoIds={listVideoIds}
             // playlistId="PLF797E961509B4EB5"
             play={isPlaying}
             loop={isLooping}
